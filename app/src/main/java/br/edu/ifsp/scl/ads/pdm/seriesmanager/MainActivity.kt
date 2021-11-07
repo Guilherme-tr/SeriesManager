@@ -1,15 +1,25 @@
 package br.edu.ifsp.scl.ads.pdm.seriesmanager
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.ArrayAdapter
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityMainBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.Serie
 
 class MainActivity : AppCompatActivity() {
+    companion object Extras {
+        const val EXTRA_SERIE = "EXTRA_SERIE"
+    }
     private val activityMainBiding: ActivityMainBinding by lazy{
         ActivityMainBinding.inflate(layoutInflater)
     }
+    private lateinit var serieActivityResultLauncher: ActivityResultLauncher<Intent>
 
     //Data source de series
     private val seriesList: MutableList<Serie> = mutableListOf()
@@ -32,6 +42,16 @@ class MainActivity : AppCompatActivity() {
 
         //Associando o adapter ao ListView
         activityMainBiding.seriesLv.adapter = seriesAdapter
+
+        serieActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { resultado ->
+            if(resultado.resultCode == RESULT_OK){
+                val serie = resultado.data?.getParcelableExtra<Serie>(EXTRA_SERIE)
+                if(serie != null){
+                    seriesList.add(serie)
+                    seriesAdapter.add(serie.toString())
+                }
+            }
+        }
     }
 
     private fun inicializarSeriesList(){
@@ -44,6 +64,21 @@ class MainActivity : AppCompatActivity() {
                     "Genero ${i}",
                 )
             )
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.manu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId){
+        R.id.adicionarSerieMi -> {
+            serieActivityResultLauncher.launch(Intent(this, SerieActivity::class.java))
+            true
+        }
+        else -> {
+            false
         }
     }
 }
