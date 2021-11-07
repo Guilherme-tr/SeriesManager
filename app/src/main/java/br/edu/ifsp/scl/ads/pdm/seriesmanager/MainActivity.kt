@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeriesAdapter
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityMainBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.Serie
 
@@ -25,12 +26,18 @@ class MainActivity : AppCompatActivity() {
     private val seriesList: MutableList<Serie> = mutableListOf()
 
     //Adapter generico
+    /*
     private val seriesAdapter: ArrayAdapter<String>  by lazy {
         ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, seriesList.run {
             val seriesStringList = mutableListOf<String>()
             this.forEach{ serie -> seriesStringList.add(serie.toString()) }
             seriesStringList
         })
+    }
+     */
+
+    private val seriesAdapter: SeriesAdapter by lazy {
+        SeriesAdapter(this, R.layout.layout_serie, seriesList)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,10 +52,10 @@ class MainActivity : AppCompatActivity() {
 
         serieActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { resultado ->
             if(resultado.resultCode == RESULT_OK){
-                val serie = resultado.data?.getParcelableExtra<Serie>(EXTRA_SERIE)
-                if(serie != null){
-                    seriesList.add(serie)
-                    seriesAdapter.add(serie.toString())
+                resultado.data?.getParcelableExtra<Serie>(EXTRA_SERIE)?.apply {
+                    seriesList.add(this)
+                    seriesAdapter.notifyDataSetChanged()
+                    //seriesList.add(this)
                 }
             }
         }
