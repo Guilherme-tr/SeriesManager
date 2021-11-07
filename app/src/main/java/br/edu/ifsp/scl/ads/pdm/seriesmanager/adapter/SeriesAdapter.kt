@@ -25,14 +25,24 @@ class SeriesAdapter(val contexto: Context,
             //inflar uma celula nova
             val layoutSerieBinding = LayoutSerieBinding.inflate(contexto.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
             )
-            serieLayoutView = layoutSerieBinding.root
+            with (layoutSerieBinding) {
+                serieLayoutView = layoutSerieBinding.root
+                serieLayoutView.tag = SerieLayoutHolder(tituloTv, lancamentoTv, generoTv)
+            }
         }
         //alterar os dados da celula
         val serie = listaSeries[position]
-        serieLayoutView.findViewById<TextView>(R.id.tituloTv).text = serie.titulo
-        serieLayoutView.findViewById<TextView>(R.id.lancamentoTv).text = serie.lancamento
-        serieLayoutView.findViewById<TextView>(R.id.generoTv).text = serie.genero
 
+        with(serieLayoutView.tag as SerieLayoutHolder){
+            tituloTv.text = serie.titulo
+            lancamentoTv.text = serie.lancamento
+            generoTv.text = serie.genero
+        }
         return serieLayoutView
     }
+    private data class SerieLayoutHolder(
+        val tituloTv: TextView,
+        val lancamentoTv: TextView,
+        val generoTv: TextView
+    )
 }
