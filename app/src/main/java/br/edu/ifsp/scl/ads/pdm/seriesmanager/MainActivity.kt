@@ -3,10 +3,10 @@ package br.edu.ifsp.scl.ads.pdm.seriesmanager
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
+import android.view.*
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeriesAdapter
@@ -50,6 +50,8 @@ class MainActivity : AppCompatActivity() {
         //Associando o adapter ao ListView
         activityMainBiding.seriesLv.adapter = seriesAdapter
 
+        registerForContextMenu(activityMainBiding.seriesLv)
+
         serieActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { resultado ->
             if(resultado.resultCode == RESULT_OK){
                 resultado.data?.getParcelableExtra<Serie>(EXTRA_SERIE)?.apply {
@@ -86,6 +88,36 @@ class MainActivity : AppCompatActivity() {
         }
         else -> {
             false
+        }
+    }
+
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        menuInflater.inflate(R.menu.context_menu_main, menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val posicao = (item.menuInfo as AdapterView.AdapterContextMenuInfo).position
+        return when(item.itemId){
+            R.id.editarSerieMi -> {
+                //Editar a serie
+                val serie = seriesList[posicao]
+                val editarSerieIntent = Intent(this, SerieActivity::class.java)
+                editarSerieIntent.putExtra(EXTRA_SERIE, serie)
+                startActivity(editarSerieIntent)
+                true
+            }
+            R.id.removerSerieMi -> {
+                //Remover a serie
+                seriesList.removeAt(posicao)
+                seriesAdapter.notifyDataSetChanged()
+                true
+            }
+            else -> {false}
         }
     }
 }

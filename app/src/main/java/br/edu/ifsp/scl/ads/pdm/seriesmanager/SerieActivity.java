@@ -33,5 +33,14 @@ public class SerieActivity extends AppCompatActivity {
                     finish();
                 }
         );
+
+        //Verifica se recebeu uma serie
+        Serie serie = getIntent().getParcelableExtra(MainActivity.EXTRA_SERIE);
+        if(serie != null){
+            activitySerieBinding.tituloEt.setText(serie.getTitulo());
+            activitySerieBinding.lancamentoEt.setText(serie.getLancamento());
+            activitySerieBinding.emissoraEt.setText(serie.getEmissora());
+            activitySerieBinding.generoEt.setText(serie.getGenero());
+        }
     }
 }
