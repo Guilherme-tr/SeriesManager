@@ -1,10 +1,10 @@
 package br.edu.ifsp.scl.ads.pdm.seriesmanager;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivitySerieBinding;
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.Serie;
