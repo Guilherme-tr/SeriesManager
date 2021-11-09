@@ -9,18 +9,22 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.recyclerview.widget.LinearLayoutManager
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeriesAdapter
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeriesRvAdapter
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityMainBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.Serie
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnSerieClickListener {
     companion object Extras {
         const val EXTRA_SERIE = "EXTRA_SERIE"
+        const val EXTRA_POSICAO = "EXTRA_POSICAO"
     }
     private val activityMainBiding: ActivityMainBinding by lazy{
         ActivityMainBinding.inflate(layoutInflater)
     }
     private lateinit var serieActivityResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var editarSerieActivityResultLauncher: ActivityResultLauncher<Intent>
 
     //Data source de series
     private val seriesList: MutableList<Serie> = mutableListOf()
@@ -36,8 +40,13 @@ class MainActivity : AppCompatActivity() {
     }
      */
 
-    private val seriesAdapter: SeriesAdapter by lazy {
-        SeriesAdapter(this, R.layout.layout_serie, seriesList)
+    private val seriesAdapter: SeriesRvAdapter by lazy {
+        SeriesRvAdapter(this, seriesList)
+    }
+
+    //LayoutManager
+    private val seriesLayoutManager: LinearLayoutManager by lazy {
+        LinearLayoutManager(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,10 +56,9 @@ class MainActivity : AppCompatActivity() {
         //Inicializando lista de series
         inicializarSeriesList()
 
-        //Associando o adapter ao ListView
-        activityMainBiding.seriesLv.adapter = seriesAdapter
-
-        registerForContextMenu(activityMainBiding.seriesLv)
+        //Associando o adapter e LayoutManager ao RecycleView
+        activityMainBiding.seriesRv.adapter = seriesAdapter
+        activityMainBiding.seriesRv.layoutManager = seriesLayoutManager
 
         serieActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { resultado ->
             if(resultado.resultCode == RESULT_OK){
@@ -61,7 +69,23 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        editarSerieActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { resultado ->
+            if(resultado.resultCode == RESULT_OK){
+                val posicao = resultado.data?.getIntExtra(EXTRA_POSICAO, -1)
+                resultado.data?.getParcelableExtra<Serie>(EXTRA_SERIE)?.apply {
+                    if(posicao != null && posicao != -1){
+                        seriesList[posicao] = this
+                        seriesAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        }
+
+        activityMainBiding.adcionarSerieFab.setOnClickListener{
+            serieActivityResultLauncher.launch(Intent(this, SerieActivity::class.java))
+        }
     }
+
 
     private fun inicializarSeriesList(){
         for (i in 1..10){
@@ -73,21 +97,6 @@ class MainActivity : AppCompatActivity() {
                     "Genero ${i}",
                 )
             )
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.manu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId){
-        R.id.adicionarSerieMi -> {
-            serieActivityResultLauncher.launch(Intent(this, SerieActivity::class.java))
-            true
-        }
-        else -> {
-            false
         }
     }
 
@@ -108,7 +117,8 @@ class MainActivity : AppCompatActivity() {
                 val serie = seriesList[posicao]
                 val editarSerieIntent = Intent(this, SerieActivity::class.java)
                 editarSerieIntent.putExtra(EXTRA_SERIE, serie)
-                startActivity(editarSerieIntent)
+                editarSerieIntent.putExtra(EXTRA_POSICAO, posicao)
+                editarSerieActivityResultLauncher.launch(editarSerieIntent)
                 true
             }
             R.id.removerSerieMi -> {
@@ -119,5 +129,12 @@ class MainActivity : AppCompatActivity() {
             }
             else -> {false}
         }
+    }
+
+    override fun onSerieClick(posicao: Int) {
+        val serie = seriesList[posicao]
+        val consultarSerieIntent = Intent(this, SerieActivity::class.java)
+        consultarSerieIntent.putExtra(EXTRA_SERIE, serie)
+        startActivity(consultarSerieIntent)
     }
 }
