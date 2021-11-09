@@ -100,17 +100,8 @@ class MainActivity : AppCompatActivity(), OnSerieClickListener {
         }
     }
 
-    override fun onCreateContextMenu(
-        menu: ContextMenu?,
-        v: View?,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-        menuInflater.inflate(R.menu.context_menu_main, menu)
-    }
-
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        val posicao = (item.menuInfo as AdapterView.AdapterContextMenuInfo).position
+        val posicao = seriesAdapter.posicao
         return when(item.itemId){
             R.id.editarSerieMi -> {
                 //Editar a serie
