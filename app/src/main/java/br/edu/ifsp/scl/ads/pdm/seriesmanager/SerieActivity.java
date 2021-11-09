@@ -43,6 +43,7 @@ public class SerieActivity extends AppCompatActivity {
         posicao = getIntent().getIntExtra(MainActivity.EXTRA_POSICAO, -1 );
         serie = getIntent().getParcelableExtra(MainActivity.EXTRA_SERIE);
         if(serie != null){
+            activitySerieBinding.tituloEt.setEnabled(false);
             activitySerieBinding.tituloEt.setText(serie.getTitulo());
             activitySerieBinding.lancamentoEt.setText(serie.getLancamento());
             activitySerieBinding.emissoraEt.setText(serie.getEmissora());

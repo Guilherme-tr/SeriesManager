@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeriesAdapter
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeriesRvAdapter
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.controller.SerieController
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityMainBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.Serie
 
@@ -27,7 +28,14 @@ class MainActivity : AppCompatActivity(), OnSerieClickListener {
     private lateinit var editarSerieActivityResultLauncher: ActivityResultLauncher<Intent>
 
     //Data source de series
-    private val seriesList: MutableList<Serie> = mutableListOf()
+    private val seriesList: MutableList<Serie> by lazy {
+        serieController.buscarSeries()
+    }
+
+    //controller
+    private val serieController: SerieController by lazy {
+        SerieController(this)
+    }
 
     //Adapter generico
     /*
@@ -53,9 +61,6 @@ class MainActivity : AppCompatActivity(), OnSerieClickListener {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBiding.root)
 
-        //Inicializando lista de series
-        inicializarSeriesList()
-
         //Associando o adapter e LayoutManager ao RecycleView
         activityMainBiding.seriesRv.adapter = seriesAdapter
         activityMainBiding.seriesRv.layoutManager = seriesLayoutManager
@@ -63,6 +68,7 @@ class MainActivity : AppCompatActivity(), OnSerieClickListener {
         serieActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { resultado ->
             if(resultado.resultCode == RESULT_OK){
                 resultado.data?.getParcelableExtra<Serie>(EXTRA_SERIE)?.apply {
+                    serieController.inserirSerie(this)
                     seriesList.add(this)
                     seriesAdapter.notifyDataSetChanged()
                     //seriesList.add(this)
@@ -74,6 +80,7 @@ class MainActivity : AppCompatActivity(), OnSerieClickListener {
                 val posicao = resultado.data?.getIntExtra(EXTRA_POSICAO, -1)
                 resultado.data?.getParcelableExtra<Serie>(EXTRA_SERIE)?.apply {
                     if(posicao != null && posicao != -1){
+                        serieController.modificarSerie(this)
                         seriesList[posicao] = this
                         seriesAdapter.notifyDataSetChanged()
                     }
@@ -86,26 +93,13 @@ class MainActivity : AppCompatActivity(), OnSerieClickListener {
         }
     }
 
-
-    private fun inicializarSeriesList(){
-        for (i in 1..10){
-            seriesList.add(
-                Serie(
-                    "Titulo ${i}",
-                    "Lançamento ${i}",
-                    "Emissora ${i}",
-                    "Genero ${i}",
-                )
-            )
-        }
-    }
-
     override fun onContextItemSelected(item: MenuItem): Boolean {
         val posicao = seriesAdapter.posicao
+        val serie = seriesList[posicao]
+
         return when(item.itemId){
             R.id.editarSerieMi -> {
                 //Editar a serie
-                val serie = seriesList[posicao]
                 val editarSerieIntent = Intent(this, SerieActivity::class.java)
                 editarSerieIntent.putExtra(EXTRA_SERIE, serie)
                 editarSerieIntent.putExtra(EXTRA_POSICAO, posicao)
@@ -114,6 +108,7 @@ class MainActivity : AppCompatActivity(), OnSerieClickListener {
             }
             R.id.removerSerieMi -> {
                 //Remover a serie
+                serieController.apagarSerie(serie.titulo)
                 seriesList.removeAt(posicao)
                 seriesAdapter.notifyDataSetChanged()
                 true
