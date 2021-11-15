@@ -1,9 +1,9 @@
 package br.edu.ifsp.scl.ads.pdm.seriesmanager.controller
 
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.MainActivity
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.Serie
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.SerieDao
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.SerieSqlite
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.SerieDao
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.SerieSqlite
 
 class SerieController(mainActivity: MainActivity) {
     private val serieDao: SerieDao = SerieSqlite(mainActivity)

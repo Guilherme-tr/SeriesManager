@@ -4,17 +4,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeriesAdapter
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeriesRvAdapter
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.controller.SerieController
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityMainBinding
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.Serie
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie
 
 class MainActivity : AppCompatActivity(), OnSerieClickListener {
     companion object Extras {

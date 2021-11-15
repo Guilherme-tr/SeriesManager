@@ -1,4 +1,4 @@
-package br.edu.ifsp.scl.ads.pdm.seriesmanager.model
+package br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie
 
 import android.content.ContentValues
 import android.content.Context
@@ -17,11 +17,11 @@ class SerieSqlite(contexto: Context): SerieDao {
         private val COLUNA_EMISSORA = "emissora"
         private val COLUNA_GENERO = "genero"
 
-        private val CRIAR_TABELA_SERIE_STMT = "CREATE TABLE IF NOT EXISTS ${TABELA_SERIE}(" +
-                "${COLUNA_TITULO} TEXT NOT NULL PRIMARY KEY, " +
-                "${COLUNA_LANCAMENTO} TEXT NOT NULL, " +
-                "${COLUNA_EMISSORA} TEXT NOT NULL, " +
-                "${COLUNA_GENERO} TEXT NOT NULL );"
+        private val CRIAR_TABELA_SERIE_STMT = "CREATE TABLE IF NOT EXISTS $TABELA_SERIE(" +
+                "$COLUNA_TITULO TEXT NOT NULL PRIMARY KEY, " +
+                "$COLUNA_LANCAMENTO TEXT NOT NULL, " +
+                "$COLUNA_EMISSORA TEXT NOT NULL, " +
+                "$COLUNA_GENERO TEXT NOT NULL );"
     }
 
     //ref para o bd
@@ -44,7 +44,7 @@ class SerieSqlite(contexto: Context): SerieDao {
             true,
             TABELA_SERIE,
             null,
-            "${COLUNA_TITULO} = ?",
+            "$COLUNA_TITULO = ?",
             arrayOf(titulo),
             null,
             null,
@@ -87,14 +87,14 @@ class SerieSqlite(contexto: Context): SerieDao {
 
     override fun atualizarSerie(serie: Serie): Int {
         val serieCv = converterSerieParaContentValues(serie)
-        return seriesBd.update(TABELA_SERIE, serieCv, "${COLUNA_TITULO} = ?", arrayOf(serie.titulo))
+        return seriesBd.update(TABELA_SERIE, serieCv, "$COLUNA_TITULO = ?", arrayOf(serie.titulo))
     }
 
     override fun removerSerie(titulo: String): Int {
-        return seriesBd.delete(TABELA_SERIE, "${COLUNA_TITULO} = ?", arrayOf(titulo))
+        return seriesBd.delete(TABELA_SERIE, "$COLUNA_TITULO = ?", arrayOf(titulo))
     }
 
-    private fun converterSerieParaContentValues(serie:Serie) = ContentValues().also {
+    private fun converterSerieParaContentValues(serie: Serie) = ContentValues().also {
         with(it){
             put(COLUNA_TITULO, serie.titulo)
             put(COLUNA_LANCAMENTO, serie.lancamento)

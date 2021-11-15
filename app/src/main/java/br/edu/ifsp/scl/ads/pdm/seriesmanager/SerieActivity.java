@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivitySerieBinding;
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.Serie;
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie;
 
 public class SerieActivity extends AppCompatActivity {
 
