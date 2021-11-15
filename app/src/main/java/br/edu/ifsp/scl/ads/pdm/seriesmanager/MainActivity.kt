@@ -16,12 +16,14 @@ class MainActivity : AppCompatActivity(), OnSerieClickListener {
     companion object Extras {
         const val EXTRA_SERIE = "EXTRA_SERIE"
         const val EXTRA_POSICAO = "EXTRA_POSICAO"
+        const val NOME_SERIE = "NOME_SERIE"
     }
     private val activityMainBiding: ActivityMainBinding by lazy{
         ActivityMainBinding.inflate(layoutInflater)
     }
     private lateinit var serieActivityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var editarSerieActivityResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var cadastrarTemporadaActivityResultLauncher: ActivityResultLauncher<Intent>
 
     //Data source de series
     private val seriesList: MutableList<Serie> by lazy {
@@ -57,6 +59,8 @@ class MainActivity : AppCompatActivity(), OnSerieClickListener {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBiding.root)
 
+
+
         //Associando o adapter e LayoutManager ao RecycleView
         activityMainBiding.seriesRv.adapter = seriesAdapter
         activityMainBiding.seriesRv.layoutManager = seriesLayoutManager
@@ -84,6 +88,20 @@ class MainActivity : AppCompatActivity(), OnSerieClickListener {
             }
         }
 
+        cadastrarTemporadaActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+                resultado ->
+            if(resultado.resultCode == RESULT_OK){
+                val posicao = resultado.data?.getIntExtra(EXTRA_POSICAO, -1)
+                resultado.data?.getParcelableExtra<Serie>(NOME_SERIE)?.let {
+                    if(posicao != null && posicao != -1){
+                        val serie = serieController.buscarSerie(it.titulo)
+                        //serie.nome = NOME_SERIE
+                    }
+                }
+            }
+        }
+
+
         activityMainBiding.adcionarSerieFab.setOnClickListener{
             serieActivityResultLauncher.launch(Intent(this, SerieActivity::class.java))
         }
@@ -107,6 +125,16 @@ class MainActivity : AppCompatActivity(), OnSerieClickListener {
                 serieController.apagarSerie(serie.titulo)
                 seriesList.removeAt(posicao)
                 seriesAdapter.notifyDataSetChanged()
+                true
+            }
+            R.id.visualizarDetalhesMi -> {
+                // Trocar tela para cadastro de temporadas
+                val serie = seriesList[posicao]
+                val exibirTelaTemporada = Intent(this, MainTemporadaActivity::class.java)
+                exibirTelaTemporada.putExtra(EXTRA_SERIE, serie)
+                exibirTelaTemporada.putExtra(EXTRA_POSICAO, posicao)
+                exibirTelaTemporada.putExtra(NOME_SERIE, serie.titulo)
+                cadastrarTemporadaActivityResultLauncher.launch(exibirTelaTemporada)
                 true
             }
             else -> {false}
