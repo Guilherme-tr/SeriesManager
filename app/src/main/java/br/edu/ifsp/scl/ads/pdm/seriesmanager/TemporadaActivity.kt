@@ -1,58 +1,55 @@
-package br.edu.ifsp.scl.ads.pdm.seriesmanager;
+package br.edu.ifsp.scl.ads.pdm.seriesmanager
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
+import androidx.appcompat.app.AppCompatActivity
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada.Temporada
+import android.os.Bundle
+import android.content.Intent
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.MainTemporadaActivity
+import android.app.Activity
+import android.view.View
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityTemporadaBinding
+import java.lang.String
 
-import androidx.appcompat.app.AppCompatActivity;
+class TemporadaActivity : AppCompatActivity() {
+    private var activityTemporadaBinding: ActivityTemporadaBinding? = null
+    private var posicao = -1
+    private var temporada: Temporada? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activityTemporadaBinding = ActivityTemporadaBinding.inflate(
+            layoutInflater
+        )
+        setContentView(activityTemporadaBinding!!.root)
+        activityTemporadaBinding!!.salvarBt.setOnClickListener { view: View? ->
+            temporada = Temporada(
+                activityTemporadaBinding!!.numeroTemporadaEt.text.toString().toInt(),
+                activityTemporadaBinding!!.anoTemporadaEt.text.toString().toInt(),
+                activityTemporadaBinding!!.qtdeEpisodiosEt.text.toString().toInt()
+            )
 
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityTemporadaBinding;
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada.Temporada;
-
-public class TemporadaActivity extends AppCompatActivity {
-
-    private ActivityTemporadaBinding activityTemporadaBinding;
-    private int posicao = -1;
-    private Temporada temporada;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        activityTemporadaBinding = ActivityTemporadaBinding.inflate(getLayoutInflater());
-        setContentView(activityTemporadaBinding.getRoot());
-
-        activityTemporadaBinding.salvarBt.setOnClickListener(
-                (View view) -> {
-                    temporada = new Temporada(
-                            Integer.parseInt(activityTemporadaBinding.numeroTemporadaEt.getText().toString()),
-                            Integer.parseInt(activityTemporadaBinding.anoTemporadaEt.getText().toString()),
-                            Integer.parseInt(activityTemporadaBinding.qtdeEpisodiosEt.getText().toString())
-                    );
-
-                    // Retornar temporada (dados preenchido na tela) para MainTemporadaActivity
-                    Intent resultadoIntent = new Intent();
-                    resultadoIntent.putExtra(MainTemporadaActivity.EXTRA_TEMPORADA, temporada);
-                    //Se foi edição, devolver posição também
-                    if(posicao != -1){
-                        resultadoIntent.putExtra(MainTemporadaActivity.EXTRA_POSICAO_TEMPORADA, posicao);
-                    }
-                    setResult(RESULT_OK, resultadoIntent);
-                    finish();
-                }
-        );
+            // Retornar temporada (dados preenchido na tela) para MainTemporadaActivity
+            val resultadoIntent = Intent()
+            resultadoIntent.putExtra(MainTemporadaActivity.EXTRA_TEMPORADA, temporada)
+            //Se foi edição, devolver posição também
+            if (posicao != -1) {
+                resultadoIntent.putExtra(MainTemporadaActivity.EXTRA_POSICAO_TEMPORADA, posicao)
+            }
+            setResult(RESULT_OK, resultadoIntent)
+            finish()
+        }
 
         // Verificando se é uma edição ou consulta e preenchendo os campos
-        posicao = getIntent().getIntExtra(MainTemporadaActivity.EXTRA_POSICAO_TEMPORADA, -1);
-        temporada = getIntent().getParcelableExtra(MainTemporadaActivity.EXTRA_TEMPORADA);
-        if(temporada != null){
-            activityTemporadaBinding.numeroTemporadaEt.setText(String.valueOf(temporada.getNumero()));
-            activityTemporadaBinding.anoTemporadaEt.setText(String.valueOf(temporada.getAno()));
-            activityTemporadaBinding.qtdeEpisodiosEt.setText(String.valueOf(temporada.getEpisodios()));
-            if(posicao == -1){
-                for(int i=0; i<activityTemporadaBinding.getRoot().getChildCount(); i++){
-                    activityTemporadaBinding.getRoot().getChildAt(i).setEnabled(false);
+        posicao = intent.getIntExtra(MainTemporadaActivity.EXTRA_POSICAO_TEMPORADA, -1)
+        temporada = intent.getParcelableExtra(MainTemporadaActivity.EXTRA_TEMPORADA)
+        if (temporada != null) {
+            activityTemporadaBinding!!.numeroTemporadaEt.setText(String.valueOf(temporada.getNumero()))
+            activityTemporadaBinding!!.anoTemporadaEt.setText(String.valueOf(temporada.getAno()))
+            activityTemporadaBinding!!.qtdeEpisodiosEt.setText(String.valueOf(temporada.getEpisodios()))
+            if (posicao == -1) {
+                for (i in 0 until activityTemporadaBinding!!.root.childCount) {
+                    activityTemporadaBinding!!.root.getChildAt(i).isEnabled = false
                 }
-                activityTemporadaBinding.salvarBt.setVisibility(View.GONE);
+                activityTemporadaBinding!!.salvarBt.visibility = View.GONE
             }
         }
     }

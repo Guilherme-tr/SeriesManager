@@ -1,59 +1,73 @@
-package br.edu.ifsp.scl.ads.pdm.seriesmanager;
+package br.edu.ifsp.scl.ads.pdm.seriesmanager
 
-import androidx.appcompat.app.AppCompatActivity;
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie.titulo
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie.lancamento
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie.emissora
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie.genero
+import androidx.appcompat.app.AppCompatActivity
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie
+import android.os.Bundle
+import android.content.Intent
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.MainActivity
+import android.app.Activity
+import android.view.View
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivitySerieBinding
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
+class SerieActivity : AppCompatActivity() {
 
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivitySerieBinding;
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie;
+    private val activitySerieBinding: ActivitySerieBinding by lazy {
+        ActivitySerieBinding.inflate(layoutInflater)
+    }
+    private var posicao = -1;
+    private lateinit var serie: Serie
 
-public class SerieActivity extends AppCompatActivity {
+    //Controller
+    private val generoController: GeneroController by lazy {
+        GeneroController(this)
+    }
 
-    private ActivitySerieBinding activitySerieBinding;
-    private int posicao = -1;
-    private Serie serie;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activitySerieBinding.root)
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        activitySerieBinding = ActivitySerieBinding.inflate(getLayoutInflater());
-        setContentView(activitySerieBinding.getRoot());
+        //Populando o spinner
+        val generos: MutableList<String> = generoController.buscarGeneros()
+        val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(
+            this, R.layout.simple_spinner_item, generos)
+        activitySerieBinding.generoSp.adapter = spinnerAdapter
 
-        activitySerieBinding.salvarBt.setOnClickListener(
-                (View view) -> {
-                    serie = new Serie(
-                            activitySerieBinding.tituloEt.getText().toString(),
-                            activitySerieBinding.lancamentoEt.getText().toString(),
-                            activitySerieBinding.emissoraEt.getText().toString(),
-                            activitySerieBinding.generoEt.getText().toString()
-                    );
-                    Intent resultadoIntent = new Intent();
-                    resultadoIntent.putExtra(MainActivity.EXTRA_SERIE, serie);
-                    if(posicao != -1){
-                        resultadoIntent.putExtra(MainActivity.EXTRA_POSICAO, posicao);
-                    }
-                    setResult(RESULT_OK, resultadoIntent);
-                    finish();
-                }
-        );
+        //Visualizar serie ou adicionar um nova
+        posicao = intent.getIntExtra(EXTRA_SERIE_POSICAO, -1)
+        intent.getParcelableExtra<Serie>(EXTRA_SERIE)?.apply {
+            activitySerieBinding.nomeEt.setText(this.nomeSerie)
+            activitySerieBinding.anoLancamentoEt.setText(this.anoLancamentoSerie)
+            activitySerieBinding.emissoraEt.setText(this.emissoraSerie)
+            activitySerieBinding.generoSp.setSelection(spinnerAdapter.getPosition(this.generoSerie))
 
-        //Verifica se é edicao ou consulta
-        posicao = getIntent().getIntExtra(MainActivity.EXTRA_POSICAO, -1 );
-        serie = getIntent().getParcelableExtra(MainActivity.EXTRA_SERIE);
-        if(serie != null){
-            activitySerieBinding.tituloEt.setEnabled(false);
-            activitySerieBinding.tituloEt.setText(serie.getTitulo());
-            activitySerieBinding.lancamentoEt.setText(serie.getLancamento());
-            activitySerieBinding.emissoraEt.setText(serie.getEmissora());
-            activitySerieBinding.generoEt.setText(serie.getGenero());
-            if(posicao == -1){
-                for(int i = 0; i < activitySerieBinding.getRoot().getChildCount(); i++){
-                    activitySerieBinding.getRoot().getChildAt(i).setEnabled(false);
-                }
-                activitySerieBinding.salvarBt.setVisibility(View.GONE);
+            if (posicao != -1) {
+                activitySerieBinding.nomeEt.isEnabled = false
+                activitySerieBinding.anoLancamentoEt.isEnabled = false
+                activitySerieBinding.emissoraEt.isEnabled = false
+                activitySerieBinding.generoSp.isEnabled = false
+                activitySerieBinding.salvarBt.visibility = View.GONE
             }
+        }
+
+        activitySerieBinding.salvarBt.setOnClickListener {
+            serie = Serie(
+                activitySerieBinding.nomeEt.text.toString(),
+                activitySerieBinding.anoLancamentoEt.text.toString(),
+                activitySerieBinding.emissoraEt.text.toString(),
+                activitySerieBinding.generoSp.selectedItem.toString()
+            )
+
+            val resultadoIntent = intent.putExtra(EXTRA_SERIE, serie)
+
+            if (posicao != -1) {
+                resultadoIntent.putExtra(EXTRA_SERIE_POSICAO, posicao)
+            }
+            setResult(RESULT_OK, resultadoIntent)
+            finish()
         }
     }
 }

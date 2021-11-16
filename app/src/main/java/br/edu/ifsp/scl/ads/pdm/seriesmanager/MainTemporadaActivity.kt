@@ -11,11 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.TemporadasRvAdapter
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.controller.TemporadaController
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityMainTemporadaBinding
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada.Temporada
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada.onTemporadaClickListener
 import com.google.android.material.snackbar.Snackbar
 
 class MainTemporadaActivity: AppCompatActivity(), onTemporadaClickListener {
+    private lateinit var serie: Serie
 
     //conseguir passar parametros de uma tela para outra
     companion object Extras{
@@ -32,7 +34,7 @@ class MainTemporadaActivity: AppCompatActivity(), onTemporadaClickListener {
 
     // Data source
     private val temporadasList: MutableList<Temporada> by lazy {
-        temporadaController.buscarTemporadas()
+        temporadaController.buscarTemporadas(serie.titulo)
     }
 
     //Controller
@@ -72,20 +74,6 @@ class MainTemporadaActivity: AppCompatActivity(), onTemporadaClickListener {
             }
         }
 
-        editarTemporadaActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-                resultado ->
-            if (resultado.resultCode == RESULT_OK){
-                val posicao = resultado.data?.getIntExtra(EXTRA_POSICAO_TEMPORADA, -1)
-                resultado.data?.getParcelableExtra<Temporada>(EXTRA_TEMPORADA)?.apply {
-                    if(posicao != null && posicao != -1){
-                        temporadaController.alterarTemporada(this)
-                        temporadasList[posicao] = this
-                        temporadaAdapter.notifyDataSetChanged()
-                    }
-                }
-            }
-        }
-
         activityMainTemporadaActivity.adicionarTemporadaFab.setOnClickListener{
             temporadaActivityResultLauncher.launch(Intent(this, TemporadaActivity::class.java))
         }
@@ -93,7 +81,7 @@ class MainTemporadaActivity: AppCompatActivity(), onTemporadaClickListener {
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        val posicao = temporadaAdapter.posicaoTemporada
+        val posicao = temporadaAdapter.posicao
         val temporada = temporadasList[posicao]
 
         return when (item.itemId) {
@@ -111,7 +99,7 @@ class MainTemporadaActivity: AppCompatActivity(), onTemporadaClickListener {
                 with(AlertDialog.Builder(this)){
                     setMessage("Confirma remoção?")
                     setPositiveButton("Sim"){ _, _ ->
-                        temporadaController.apagarTemporada(temporada.numero)
+                        temporadaController.apagarTemporadas(serie.titulo, temporada.numeroSequencialTemp)
                         temporadasList.removeAt(posicao)
                         temporadaAdapter.notifyDataSetChanged()
                         Snackbar.make(activityMainTemporadaActivity.root, "Item removido", Snackbar.LENGTH_SHORT).show()

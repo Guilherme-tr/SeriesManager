@@ -1,106 +1,66 @@
-package br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada
-
 import android.content.ContentValues
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.R
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.GerenciamentoBD
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada.Temporada
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada.TemporadaDAO
 
-class TemporadaSqlite(context: Context): TemporadaDAO {
-
-    companion object{
-        private val BD_TEMPORADAS = "temporadas"
-        private val TABELA_TEMPORADA = "temporada"
-        private val COLUNA_NUMERO = "numero"
-        private val COLUNA_ANO = "ano"
-        private val COLUNA_EPISODIOS = "episodios"
-
-        private val CRIAR_TABELA_TEMPORADA_STMT = "CREATE TABLE IF NOT EXISTS ${TABELA_TEMPORADA} (" +
-                "${COLUNA_NUMERO} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                "${COLUNA_ANO} INTEGER NOT NULL," +
-                "${COLUNA_EPISODIOS} INTEGER NOT NULL );"
-    }
-
-    // Referência para o banco de dados
-    private val temporadasBd: SQLiteDatabase
-    init {
-        temporadasBd = context.openOrCreateDatabase(BD_TEMPORADAS, MODE_PRIVATE, null)
-        try{
-            temporadasBd.execSQL(CRIAR_TABELA_TEMPORADA_STMT)
-        }catch (se: SQLException){
-            Log.e(context.getString(R.string.app_name), se.toString())
-        }
-    }
+class TemporadaSqlite (contexto: Context): TemporadaDAO {
+    private val bdSeries: SQLiteDatabase = GerenciamentoBD(contexto).getSeriesBD()
 
     override fun criarTemporada(temporada: Temporada): Long {
-        val temporadaCv = converterTemporadaParaContentValues(temporada)
+        val temporadaCv = ContentValues()
+        temporadaCv.put("numero_sequencial", temporada.numeroSequencialTemp)
+        temporadaCv.put("ano_lancamento", temporada.anoLancamentoTemp)
+        temporadaCv.put("qtd_episodios", temporada.qtdEpisodiosTemp)
+        temporadaCv.put("nome_serie", temporada.nomeSerie)
 
-        return temporadasBd.insert(TABELA_TEMPORADA, null, temporadaCv)
+        return bdSeries.insert("TEMPORADA", null, temporadaCv)
     }
 
-    override fun recuperarTemporada(numero: Int): Temporada {
-        val temporadaCursor = temporadasBd.query(
-            true,           //distinct
-            TABELA_TEMPORADA, // tabela
-            null,        // parametros
-            "${COLUNA_NUMERO} = ?",  // where
-            arrayOf(numero.toString()),    //valores do where
-            null,
-            null,
-            null,
-            null
-        )
+    override fun recuperarTemporadas(nomeSerie: String): MutableList<Temporada> {
+        val temporadasList: MutableList<Temporada> = ArrayList()
+        val temporadaCursor = bdSeries.rawQuery("SELECT * " +
+                "                                    FROM TEMPORADA WHERE nome_serie = ?;", arrayOf(nomeSerie))
+        val temporada: Temporada
 
-        return if (temporadaCursor.moveToFirst()){
-            with(temporadaCursor){
-                Temporada(
-                    getInt(getColumnIndexOrThrow(COLUNA_NUMERO)),
-                    getInt(getColumnIndexOrThrow(COLUNA_ANO)),
-                    getInt(getColumnIndexOrThrow(COLUNA_EPISODIOS))
+        if (temporadaCursor.moveToFirst()) {
+            while (!temporadaCursor.isAfterLast) {
+                val temporada = Temporada(
+                    temporadaCursor.getInt(temporadaCursor.getColumnIndexOrThrow("numero_sequencial")),
+                    temporadaCursor.getString(temporadaCursor.getColumnIndexOrThrow("ano_lancamento")),
+                    temporadaCursor.getString(temporadaCursor.getColumnIndexOrThrow("qtd_episodios")),
+                    temporadaCursor.getString(temporadaCursor.getColumnIndexOrThrow("nome_serie"))
                 )
-            }
-        }
-        else{
-            Temporada()
-        }
-    }
-
-    override fun recuperarTemporadas(): MutableList<Temporada> {
-        val temporadasList = mutableListOf<Temporada>()
-
-        val temporadasCursor = temporadasBd.rawQuery("SELECT * FROM ${TABELA_TEMPORADA};", null)
-
-        while(temporadasCursor.moveToNext()){
-            with(temporadasCursor){
-                temporadasList.add(
-                    Temporada(
-                        getInt(getColumnIndexOrThrow(COLUNA_NUMERO)),
-                        getInt(getColumnIndexOrThrow(COLUNA_ANO)),
-                        getInt(getColumnIndexOrThrow(COLUNA_EPISODIOS))
-                    )
-                )
+                temporadasList.add(temporada)
+                temporadaCursor.moveToNext()
             }
         }
         return temporadasList
     }
 
-    override fun atualizarTemporada(temporada: Temporada): Int {
-        val temporadaCv = converterTemporadaParaContentValues(temporada)
+    override fun removerTemporada(nomeSerie: String, numeroSequencial: Int): Int {
+        val numeroSequencialtoString: String = numeroSequencial.toString()
+        val temporadaId = buscarTemporadaId(nomeSerie, numeroSequencial)
 
-        return temporadasBd.update(TABELA_TEMPORADA, temporadaCv, "${COLUNA_NUMERO} = ?", arrayOf(temporada.numero.toString()))
+        //É necessário deletar todos os episódios antes de deletar a temporada
+        bdSeries.delete("EPISODIO", "temporada_id = ? ", arrayOf(temporadaId.toString()))
+
+        //Episódios deletados, deletando temporada
+        return bdSeries.delete("TEMPORADA", "numero_sequencial = ? AND nome_serie = ?",
+            arrayOf(numeroSequencialtoString, nomeSerie)
+        )
     }
 
-    override fun removerTemporada(numero: Int): Int {
-        return temporadasBd.delete(TABELA_TEMPORADA, "${COLUNA_ANO} = ?", arrayOf(numero.toString()))
-    }
+    override fun buscarTemporadaId(nomeSerie: String, numeroSequencial: Int): Int {
+        val temporadaCursor = bdSeries.rawQuery("SELECT id_temporada " +
+                "                                   from TEMPORADA WHERE numero_sequencial = ? AND nome_serie = ?",
+            arrayOf(numeroSequencial.toString(), nomeSerie))
+        var temporadaId: Int = 0
 
-    private fun converterTemporadaParaContentValues(temporada: Temporada) = ContentValues().also {
-        with(it){
-            put(COLUNA_NUMERO, temporada.numero)
-            put(COLUNA_ANO, temporada.ano)
-            put(COLUNA_EPISODIOS, temporada.episodios)
+        if (temporadaCursor.moveToFirst()){
+            temporadaId = temporadaCursor.getInt(temporadaCursor.getColumnIndexOrThrow("id_temporada"))
         }
+        return temporadaId
     }
 }
