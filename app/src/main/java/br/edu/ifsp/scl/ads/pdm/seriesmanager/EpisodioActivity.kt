@@ -4,9 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.episodio.Episodio
 import android.os.Bundle
 import android.view.View
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.EpisodioListaActivity.Extras.EXTRA_EPISODIO
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.EpisodioListaActivity.Extras.EXTRA_POSICAO_EP
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.TemporadaListaActivity.Extras.EXTRA_ID_TEMPORADA
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.EpisodioListagemActivity.Extras.EXTRA_EPISODIO
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.EpisodioListagemActivity.Extras.EXTRA_POSICAO_EP
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.TemporadaListagemActivity.Extras.EXTRA_ID_TEMPORADA
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityEpisodioBinding
 
 

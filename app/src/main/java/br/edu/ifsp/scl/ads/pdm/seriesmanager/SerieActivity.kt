@@ -5,8 +5,8 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.SerieListaActivity.Extras.EXTRA_SERIE
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.SerieListaActivity.Extras.EXTRA_SERIE_POSICAO
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.SerieListagemActivity.Extras.EXTRA_SERIE
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.SerieListagemActivity.Extras.EXTRA_SERIE_POSICAO
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.controller.GeneroController
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivitySerieBinding
 

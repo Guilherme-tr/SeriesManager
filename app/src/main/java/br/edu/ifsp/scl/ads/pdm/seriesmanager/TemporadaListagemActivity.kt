@@ -8,7 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.SerieListaActivity.Extras.EXTRA_SERIE
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.SerieListagemActivity.Extras.EXTRA_SERIE
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.TemporadasRvAdapter
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.controller.TemporadaController
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityTemporadaListaBinding
@@ -16,7 +16,7 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada.Temporada
 import com.google.android.material.snackbar.Snackbar
 
-class TemporadaListaActivity : AppCompatActivity(), OnTemporadaClickListener {
+class TemporadaListagemActivity : AppCompatActivity(), OnTemporadaClickListener {
     companion object Extras {
         const val EXTRA_TEMPORADA = "EXTRA_TEMPORADA"
         const val EXTRA_POSICAO_TEMP = "EXTRA_POSICAO_TEMP"
@@ -126,7 +126,7 @@ class TemporadaListaActivity : AppCompatActivity(), OnTemporadaClickListener {
     override fun onTemporadaClick(posicao: Int) {
         val temporada = temporadaList[posicao]
         val temporadaId = temporadaController.buscarTemporadaId(temporada.nomeSerie, temporada.numeroSequencialTemp)
-        val consultarEpisodiosIntent = Intent(this, EpisodioListaActivity::class.java)
+        val consultarEpisodiosIntent = Intent(this, EpisodioListagemActivity::class.java)
         consultarEpisodiosIntent.putExtra(EXTRA_TEMPORADA, temporada)
         consultarEpisodiosIntent.putExtra(EXTRA_ID_TEMPORADA, temporadaId)
         startActivity(consultarEpisodiosIntent)

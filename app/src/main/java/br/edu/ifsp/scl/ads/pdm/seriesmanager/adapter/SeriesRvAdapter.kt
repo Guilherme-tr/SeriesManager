@@ -3,14 +3,13 @@ package br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter
 import android.view.*
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.OnSerieClickListener
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.R
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.SerieListaActivity
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.SerieListagemActivity
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.LayoutSerieBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie
 
 class SeriesRvAdapter (
-    private val onSerieClickListener: SerieListaActivity,
+    private val onSerieClickListener: SerieListagemActivity,
     private val serieList: MutableList<Serie>
 ): RecyclerView.Adapter<SeriesRvAdapter.SerieLayoutHolder>() {
 

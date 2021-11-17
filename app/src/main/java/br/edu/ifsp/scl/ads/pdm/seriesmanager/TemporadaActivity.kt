@@ -4,9 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada.Temporada
 import android.os.Bundle
 import android.view.View
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.SerieListaActivity.Extras.EXTRA_SERIE
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.TemporadaListaActivity.Extras.EXTRA_POSICAO_TEMP
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.TemporadaListaActivity.Extras.EXTRA_TEMPORADA
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.SerieListagemActivity.Extras.EXTRA_SERIE
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.TemporadaListagemActivity.Extras.EXTRA_POSICAO_TEMP
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.TemporadaListagemActivity.Extras.EXTRA_TEMPORADA
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityTemporadaBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie
 

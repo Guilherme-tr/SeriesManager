@@ -8,17 +8,14 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.TemporadaListaActivity.Extras.EXTRA_ID_TEMPORADA
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.TemporadaListagemActivity.Extras.EXTRA_ID_TEMPORADA
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.EpisodiosRvAdapter
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter.SeriesRvAdapter
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.controller.EpisodioController
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.controller.SerieController
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityEpisodioListaBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.episodio.Episodio
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie
 import com.google.android.material.snackbar.Snackbar
 
-class EpisodioListaActivity : AppCompatActivity(), OnEpisodioClickListener {
+class EpisodioListagemActivity : AppCompatActivity(), OnEpisodioClickListener {
     companion object Extras {
         const val EXTRA_EPISODIO = "EXTRA_EPISODIO"
         const val EXTRA_POSICAO_EP = "EXTRA_POSICAO_EP"

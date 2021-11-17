@@ -13,7 +13,7 @@
             android:name="EpisodioActivity"
             android:exported="true" />
         <activity
-            android:name="EpisodioListaActivity"
+            android:name="EpisodioListagemActivity"
             android:exported="true" />
         <activity
             android:name="TemporadaActivity"
@@ -22,10 +22,10 @@
             android:name="SerieActivity"
             android:exported="true" />
         <activity
-            android:name="TemporadaListaActivity"
+            android:name="TemporadaListagemActivity"
             android:exported="true"/>
         <activity
-            android:name="SerieListaActivity"
+            android:name="SerieListagemActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

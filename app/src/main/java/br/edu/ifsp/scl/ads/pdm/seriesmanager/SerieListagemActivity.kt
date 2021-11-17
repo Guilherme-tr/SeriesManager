@@ -14,7 +14,7 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivitySerieListaBindi
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie
 import com.google.android.material.snackbar.Snackbar
 
-class SerieListaActivity : AppCompatActivity(), OnSerieClickListener {
+class SerieListagemActivity : AppCompatActivity(), OnSerieClickListener {
     companion object Extras {
         const val EXTRA_SERIE = "EXTRA_SERIE"
         const val EXTRA_SERIE_POSICAO = "EXTRA_POSICAO_SERIE"
@@ -114,7 +114,7 @@ class SerieListaActivity : AppCompatActivity(), OnSerieClickListener {
 
     override fun onSerieClick(posicao: Int) {
         val serie = serieList[posicao]
-        val consultarTemporadasIntent = Intent(this, TemporadaListaActivity::class.java)
+        val consultarTemporadasIntent = Intent(this, TemporadaListagemActivity::class.java)
         consultarTemporadasIntent.putExtra(EXTRA_SERIE, serie)
         startActivity(consultarTemporadasIntent)
     }

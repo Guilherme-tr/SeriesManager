@@ -6,6 +6,7 @@
     android:clickable="true"
     android:focusable="true"
     android:background="?android:attr/selectableItemBackground"
+    android:layout_marginTop="6dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
@@ -19,22 +20,22 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/anoLancamentoTv"
+        android:id="@+id/emissoraTv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Ano de lançamento"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/emissoraTv"
+        app:layout_constraintEnd_toStartOf="@id/anoLancamentoTv"
         app:layout_constraintTop_toBottomOf="@id/nomeTv"/>
 
     <TextView
-        android:id="@+id/emissoraTv"
+        android:id="@+id/anoLancamentoTv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Emissora"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/anoLancamentoTv"
+        app:layout_constraintStart_toEndOf="@+id/emissoraTv"
         app:layout_constraintEnd_toEndOf="@id/generoTv"
         app:layout_constraintTop_toBottomOf="@+id/nomeTv"/>
 
@@ -44,7 +45,7 @@
         android:layout_height="wrap_content"
         android:text="Genero"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@id/emissoraTv"
+        app:layout_constraintStart_toEndOf="@id/anoLancamentoTv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nomeTv"/>
 
