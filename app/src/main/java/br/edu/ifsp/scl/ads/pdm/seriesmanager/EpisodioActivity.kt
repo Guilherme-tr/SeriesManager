@@ -9,6 +9,7 @@ import br.edu.ifsp.scl.ads.pdm.seriesmanager.EpisodioListaActivity.Extras.EXTRA_
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.TemporadaListaActivity.Extras.EXTRA_ID_TEMPORADA
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityEpisodioBinding
 
+
 class EpisodioActivity: AppCompatActivity() {
     private val activityEpisodiosBinding: ActivityEpisodioBinding by lazy {
         ActivityEpisodioBinding.inflate(layoutInflater)

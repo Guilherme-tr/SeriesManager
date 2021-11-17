@@ -10,22 +10,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SeriesManager">
         <activity
-            android:name=".EpisodioActivity"
+            android:name="EpisodioActivity"
             android:exported="true" />
         <activity
-            android:name=".TemporadaActivity"
+            android:name="EpisodioListaActivity"
             android:exported="true" />
         <activity
-            android:name=".SerieActivity"
+            android:name="TemporadaActivity"
             android:exported="true" />
         <activity
-            android:name=".MainEpisodioActivity"
+            android:name="SerieActivity"
+            android:exported="true" />
+        <activity
+            android:name="TemporadaListaActivity"
             android:exported="true"/>
         <activity
-            android:name=".MainTemporadaActivity"
-            android:exported="true"/>
-        <activity
-            android:name=".EpisodioListaActivity"
+            android:name="SerieListaActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
