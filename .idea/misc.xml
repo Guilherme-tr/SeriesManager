@@ -5,16 +5,21 @@
       <map>
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/drawable-anydpi/ic_adicionar_serie.xml" value="0.403125" />
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/layout/activity_episodio.xml" value="0.38697916666666665" />
+        <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/layout/activity_episodio_lista.xml" value="0.33" />
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/layout/activity_main.xml" value="0.21875" />
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/layout/activity_main_episodio.xml" value="0.18" />
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/layout/activity_main_temporada.xml" value="0.23418573351278602" />
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/layout/activity_serie.xml" value="0.24114583333333334" />
+        <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/layout/activity_serie_lista.xml" value="0.38697916666666665" />
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/layout/activity_temporada.xml" value="0.38697916666666665" />
+        <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/layout/activity_temporada_lista.xml" value="0.38697916666666665" />
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/layout/layout_episodio.xml" value="0.38697916666666665" />
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/layout/layout_serie.xml" value="0.25" />
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/layout/layout_temporada.xml" value="0.38697916666666665" />
+        <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/menu/context_menu_episodio.xml" value="0.38697916666666665" />
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/menu/context_menu_main.xml" value="0.21875" />
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/menu/context_menu_main_episodio.xml" value="0.38697916666666665" />
+        <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/menu/context_menu_serie.xml" value="0.38697916666666665" />
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/menu/context_menu_temporada.xml" value="0.38697916666666665" />
         <entry key="..\:/Faculdade/Repositorios/SeriesManager/app/src/main/res/menu/manu_main.xml" value="0.24114583333333334" />
       </map>

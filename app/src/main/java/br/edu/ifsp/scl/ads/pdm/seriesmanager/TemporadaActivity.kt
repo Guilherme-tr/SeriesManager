@@ -3,54 +3,57 @@ package br.edu.ifsp.scl.ads.pdm.seriesmanager
 import androidx.appcompat.app.AppCompatActivity
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada.Temporada
 import android.os.Bundle
-import android.content.Intent
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.MainTemporadaActivity
-import android.app.Activity
 import android.view.View
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.SerieListaActivity.Extras.EXTRA_SERIE
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.TemporadaListaActivity.Extras.EXTRA_POSICAO_TEMP
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.TemporadaListaActivity.Extras.EXTRA_TEMPORADA
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivityTemporadaBinding
-import java.lang.String
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie
 
-class TemporadaActivity : AppCompatActivity() {
-    private var activityTemporadaBinding: ActivityTemporadaBinding? = null
-    private var posicao = -1
-    private var temporada: Temporada? = null
+class TemporadaActivity: AppCompatActivity() {
+    private val activityTemporadaBinding: ActivityTemporadaBinding by lazy {
+        ActivityTemporadaBinding.inflate(layoutInflater)
+    }
+    private var posicao = -1;
+    private lateinit var serie: Serie
+    private lateinit var temporada: Temporada
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityTemporadaBinding = ActivityTemporadaBinding.inflate(
-            layoutInflater
-        )
-        setContentView(activityTemporadaBinding!!.root)
-        activityTemporadaBinding!!.salvarBt.setOnClickListener { view: View? ->
-            temporada = Temporada(
-                activityTemporadaBinding!!.numeroTemporadaEt.text.toString().toInt(),
-                activityTemporadaBinding!!.anoTemporadaEt.text.toString().toInt(),
-                activityTemporadaBinding!!.qtdeEpisodiosEt.text.toString().toInt()
-            )
+        setContentView(activityTemporadaBinding.root)
 
-            // Retornar temporada (dados preenchido na tela) para MainTemporadaActivity
-            val resultadoIntent = Intent()
-            resultadoIntent.putExtra(MainTemporadaActivity.EXTRA_TEMPORADA, temporada)
-            //Se foi edição, devolver posição também
+        //Inicializar a lateinit var
+        serie = intent.getParcelableExtra<Serie>(EXTRA_SERIE)!!
+
+        //Visualizar temporada ou adicionar um nova
+        posicao = intent.getIntExtra(EXTRA_POSICAO_TEMP, -1)
+        intent.getParcelableExtra<Temporada>(EXTRA_TEMPORADA)?.apply {
+            activityTemporadaBinding.numeroSequencialEpisodioEt.setText(this.numeroSequencialTemp.toString())
+            activityTemporadaBinding.anoLancamentoEt.setText(this.anoLancamentoTemp)
+            activityTemporadaBinding.qtdEpisodiosEt.setText(this.qtdEpisodiosTemp)
             if (posicao != -1) {
-                resultadoIntent.putExtra(MainTemporadaActivity.EXTRA_POSICAO_TEMPORADA, posicao)
+                activityTemporadaBinding.numeroSequencialEpisodioEt.isEnabled = false
+                activityTemporadaBinding.anoLancamentoEt.isEnabled = false
+                activityTemporadaBinding.qtdEpisodiosEt.isEnabled = false
+                activityTemporadaBinding.salvarBt.visibility = View.GONE
             }
-            setResult(RESULT_OK, resultadoIntent)
-            finish()
         }
 
-        // Verificando se é uma edição ou consulta e preenchendo os campos
-        posicao = intent.getIntExtra(MainTemporadaActivity.EXTRA_POSICAO_TEMPORADA, -1)
-        temporada = intent.getParcelableExtra(MainTemporadaActivity.EXTRA_TEMPORADA)
-        if (temporada != null) {
-            activityTemporadaBinding!!.numeroTemporadaEt.setText(String.valueOf(temporada.getNumero()))
-            activityTemporadaBinding!!.anoTemporadaEt.setText(String.valueOf(temporada.getAno()))
-            activityTemporadaBinding!!.qtdeEpisodiosEt.setText(String.valueOf(temporada.getEpisodios()))
-            if (posicao == -1) {
-                for (i in 0 until activityTemporadaBinding!!.root.childCount) {
-                    activityTemporadaBinding!!.root.getChildAt(i).isEnabled = false
-                }
-                activityTemporadaBinding!!.salvarBt.visibility = View.GONE
+        activityTemporadaBinding.salvarBt.setOnClickListener {
+            temporada = Temporada(
+                activityTemporadaBinding.numeroSequencialEpisodioEt.text.toString().toInt(),
+                activityTemporadaBinding.anoLancamentoEt.text.toString(),
+                activityTemporadaBinding.qtdEpisodiosEt.text.toString(),
+                serie.nomeSerie
+            )
+
+            val resultadoIntent = intent.putExtra(EXTRA_TEMPORADA, temporada)
+
+            if (posicao != -1) {
+                resultadoIntent.putExtra(EXTRA_TEMPORADA, posicao)
             }
+            setResult(AppCompatActivity.RESULT_OK, resultadoIntent)
+            finish()
         }
     }
 }

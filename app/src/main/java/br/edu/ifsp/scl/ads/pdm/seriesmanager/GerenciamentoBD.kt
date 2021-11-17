@@ -1,10 +1,9 @@
-package br.edu.ifsp.scl.ads.pdm.seriesmanager.model
+package br.edu.ifsp.scl.ads.pdm.seriesmanager
 
 import android.content.Context
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.R
 
 class GerenciamentoBD (contexto: Context) {
     companion object {

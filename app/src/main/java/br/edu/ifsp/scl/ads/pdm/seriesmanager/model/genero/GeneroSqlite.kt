@@ -2,7 +2,7 @@ package br.edu.ifsp.scl.ads.pdm.seriesmanager.model.genero
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.GerenciamentoBD
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.GerenciamentoBD
 
 class GeneroSqlite(contexto: Context): GeneroDAO {
     private val bdSeries: SQLiteDatabase = GerenciamentoBD(contexto).getSeriesBD()

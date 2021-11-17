@@ -3,13 +3,13 @@ package br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter
 import android.view.*
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.OnTemporadaClickListener
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.R
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.LayoutTemporadaBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada.Temporada
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada.onTemporadaClickListener
 
 class TemporadasRvAdapter (
-    private val onTemporadaClickListener: onTemporadaClickListener,
+    private val onTemporadaClickListener: OnTemporadaClickListener,
     private val temporadaList: MutableList<Temporada>
 ): RecyclerView.Adapter<TemporadasRvAdapter.TemporadaLayoutHolder>() {
 
@@ -18,9 +18,9 @@ class TemporadasRvAdapter (
 
     //View Holder
     inner class TemporadaLayoutHolder(layoutTemporadaBinding: LayoutTemporadaBinding): RecyclerView.ViewHolder(layoutTemporadaBinding.root), View.OnCreateContextMenuListener {
-        val numeroSequencialTv: TextView = layoutTemporadaBinding.numeroTemporadaTv
-        val anoLancamentoTv: TextView = layoutTemporadaBinding.anoTemporadaTv
-        val qtdEpisodiosTv: TextView = layoutTemporadaBinding.episodiosTv
+        val numeroSequencialTv: TextView = layoutTemporadaBinding.numeroSequencialTv
+        val anoLancamentoTv: TextView = layoutTemporadaBinding.anoLancamentoTv
+        val qtdEpisodiosTv: TextView = layoutTemporadaBinding.qtdEpisodiosTv
 
         init {
             itemView.setOnCreateContextMenuListener(this)

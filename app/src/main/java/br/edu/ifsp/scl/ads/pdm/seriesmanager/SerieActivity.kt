@@ -1,16 +1,13 @@
 package br.edu.ifsp.scl.ads.pdm.seriesmanager
 
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie.titulo
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie.lancamento
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie.emissora
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie.genero
 import androidx.appcompat.app.AppCompatActivity
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.serie.Serie
 import android.os.Bundle
-import android.content.Intent
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.MainActivity
-import android.app.Activity
 import android.view.View
+import android.widget.ArrayAdapter
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.SerieListaActivity.Extras.EXTRA_SERIE
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.SerieListaActivity.Extras.EXTRA_SERIE_POSICAO
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.controller.GeneroController
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.ActivitySerieBinding
 
 class SerieActivity : AppCompatActivity() {
@@ -33,7 +30,7 @@ class SerieActivity : AppCompatActivity() {
         //Populando o spinner
         val generos: MutableList<String> = generoController.buscarGeneros()
         val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(
-            this, R.layout.simple_spinner_item, generos)
+            this, R.layout.support_simple_spinner_dropdown_item, generos) ///// VERIFICAR TESTE
         activitySerieBinding.generoSp.adapter = spinnerAdapter
 
         //Visualizar serie ou adicionar um nova

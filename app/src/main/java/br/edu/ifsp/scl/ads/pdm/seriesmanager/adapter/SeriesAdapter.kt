@@ -1,3 +1,4 @@
+/*
 package br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter
 
 import android.content.Context
@@ -44,4 +45,4 @@ class SeriesAdapter(val contexto: Context,
         val lancamentoTv: TextView,
         val generoTv: TextView
     )
-}
+}*/

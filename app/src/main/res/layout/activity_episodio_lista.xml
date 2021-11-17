@@ -4,38 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainEpisodioActivity">
+    tools:context="EpisodioListaActivity">
 
     <TextView
         android:id="@+id/tituloTv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Episodios"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="4dp"
+        android:text="Episódios"
         android:textSize="25dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:gravity="center_horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/episodiosRv"
+        android:id="@+id/EpisodiosRv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/adicionarEpisodioFab"
+        android:id="@+id/adicionarEpisodioFb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:focusable="true"
         android:layout_margin="16dp"
         app:srcCompat="@drawable/ic_adicionar_serie"
-        android:contentDescription="Adicionar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="VectorDrawableCompat" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

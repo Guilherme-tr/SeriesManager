@@ -1,26 +1,30 @@
 package br.edu.ifsp.scl.ads.pdm.seriesmanager.adapter
 
 import android.view.*
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.OnEpisodioClickListener
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.R
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.databinding.LayoutEpisodioBinding
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.episodio.Episodio
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.episodio.onEpisodioClickListener
 
 class EpisodiosRvAdapter(
-    private val onEpisodioClickListener: onEpisodioClickListener,
-    private val episodiosList: MutableList<Episodio>
+    private val onEpisodioClickListener: OnEpisodioClickListener,
+    private val episodioList: MutableList<Episodio>
 ): RecyclerView.Adapter<EpisodiosRvAdapter.EpisodioLayoutHolder>() {
 
     //Posição que será recuperada pelo menu de contexto
-    var posicaoEpisodio: Int = -1
+    var posicao: Int = -1
 
-    //ViewHolder
-    inner class EpisodioLayoutHolder(layoutEpisodioBinding: LayoutEpisodioBinding): RecyclerView.ViewHolder(layoutEpisodioBinding.root), View.OnCreateContextMenuListener{
-        val numeroTv: TextView = layoutEpisodioBinding.numeroEpisodioTv
-        val nomeTv: TextView = layoutEpisodioBinding.nomeEpisodioTv
-        val duracaoTv : TextView = layoutEpisodioBinding.duracaoEpisodioTv
+    //View Holder
+    inner class EpisodioLayoutHolder(layoutEpisodioBinding: LayoutEpisodioBinding): RecyclerView.ViewHolder(layoutEpisodioBinding.root), View.OnCreateContextMenuListener {
+        val nomeEpisodioTv: TextView = layoutEpisodioBinding.nomeEpisodioTv
+        val numeroSequencialEpisodioTv: TextView = layoutEpisodioBinding.numeroSequencialEpisodioTv
+        val duracaoEpisodioTv: TextView = layoutEpisodioBinding.duracaoEpisodioTv
+        val foiVistoCb: CheckBox = layoutEpisodioBinding.assistidoCb
+
         init {
             itemView.setOnCreateContextMenuListener(this)
         }
@@ -30,42 +34,38 @@ class EpisodiosRvAdapter(
             view: View?,
             menuInfo: ContextMenu.ContextMenuInfo?
         ) {
-            MenuInflater(view?.context).inflate(R.menu.context_menu_main_episodio, menu)
+            MenuInflater(view?.context).inflate(R.menu.context_menu_episodio, menu)
         }
     }
 
-
-    // Quando uma nova cécula precisar ser criada
+    //Quando uma nova célula precisa ser criada
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodioLayoutHolder {
-        // Criar uma nova célula
-        val layoutEpisodioBinding =  LayoutEpisodioBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        //Criar uma nova célula
+        val layoutEpisodioBinding = LayoutEpisodioBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        //Criar um viewHolder associado a nova célula
-        val viewHolder = EpisodioLayoutHolder(layoutEpisodioBinding)
-        return viewHolder
+        //Criar um holder associado a nova célula
+        return EpisodioLayoutHolder(layoutEpisodioBinding)
     }
 
-    // Quando necessário atualizar valores de uma cécula, seja uma célula nova ou antiga
+    //Quando for necessário atualizar os valores de uma célula
     override fun onBindViewHolder(holder: EpisodioLayoutHolder, position: Int) {
-        // Buscar episódio
-        val episodio = episodiosList[position]
+        val episodio = episodioList[position]
 
-        // Atualizar os valores do viewHolder
-        with(holder){
-            numeroTv.text = episodio.numero.toString()
-            nomeTv.text = episodio.nome
-            duracaoTv.text = episodio.duracao.toString()
+        //Atualizar os valores do viewHolder
+        with(holder) {
+            nomeEpisodioTv.text = episodio.nomeEp
+            numeroSequencialEpisodioTv.text = episodio.numeroSequencialEp.toString()
+            duracaoEpisodioTv.text = episodio.duracaoEp.toString()
+            foiVistoCb.isChecked = episodio.assistidoEp
             itemView.setOnClickListener {
                 onEpisodioClickListener.onEpisodioClick(position)
             }
             itemView.setOnLongClickListener{
-                posicaoEpisodio = position
+                posicao = position
                 false
             }
         }
     }
 
-    override fun getItemCount(): Int {
-        return episodiosList.size
-    }
+    override fun getItemCount(): Int = episodioList.size
 }

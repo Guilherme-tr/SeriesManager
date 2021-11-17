@@ -1,7 +1,7 @@
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.GerenciamentoBD
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.GerenciamentoBD
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada.Temporada
 import br.edu.ifsp.scl.ads.pdm.seriesmanager.model.temporada.TemporadaDAO
 

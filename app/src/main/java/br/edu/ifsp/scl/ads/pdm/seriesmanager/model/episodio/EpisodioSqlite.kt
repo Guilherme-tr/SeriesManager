@@ -2,112 +2,83 @@ package br.edu.ifsp.scl.ads.pdm.seriesmanager.model.episodio
 
 import android.content.ContentValues
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
-import br.edu.ifsp.scl.ads.pdm.seriesmanager.R
-import java.lang.Boolean.getBoolean
+import br.edu.ifsp.scl.ads.pdm.seriesmanager.GerenciamentoBD
 
-class EpisodioSqlite(context: Context): EpisodioDAO {
-
-    companion object{
-        private val BD_EPISODIOS = "episodios"
-        private val TABELA_EPISODIO = "episodio"
-        private val COLUNA_NUMERO = "numero"
-        private val COLUNA_NOME = "nome"
-        private val COLUNA_DURACAO = "duracao"
-        private val COLUNA_ASSISTIDO = "assistido"
-
-        private val CRIAR_TABELA_EPISODIO_STMT = "CREATE TABLE IF NOT EXISTS ${TABELA_EPISODIO} (" +
-                "${COLUNA_NUMERO} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                "${COLUNA_NOME} INTEGER NOT NULL," +
-                "${COLUNA_DURACAO} INTEGER NOT NULL," +
-                "${COLUNA_ASSISTIDO} BOOLEAN );"
-    }
-
-    // Referência para o banco de dados
-    private val episodiosBd: SQLiteDatabase
-    init {
-        episodiosBd = context.openOrCreateDatabase(BD_EPISODIOS, MODE_PRIVATE, null)
-        try{
-            episodiosBd.execSQL(CRIAR_TABELA_EPISODIO_STMT)
-        }catch (se: SQLException){
-            Log.e(context.getString(R.string.app_name), se.toString())
-        }
-    }
+class EpisodioSqlite  (contexto: Context): EpisodioDAO {
+    private val bdSeries: SQLiteDatabase = GerenciamentoBD(contexto).getSeriesBD()
 
     override fun criarEpisodio(episodio: Episodio): Long {
-        val episodioCv = converterEpisodioParaContentValues(episodio)
+        val episodioCv = ContentValues()
+        episodioCv.put("numero_sequencial", episodio.numeroSequencialEp)
+        episodioCv.put("nome", episodio.nomeEp)
+        episodioCv.put("duracao", episodio.duracaoEp)
+        episodioCv.put("assistido", episodio.assistidoEp)
+        episodioCv.put("temporada_id", episodio.temporadaId)
 
-        return episodiosBd.insert(TABELA_EPISODIO, null, episodioCv)
+        return bdSeries.insert("EPISODIO", null, episodioCv)
     }
 
-    override fun recuperarEpisodio(numero: Int): Episodio {
-        val episodioCursor = episodiosBd.query(
-            true,
-            TABELA_EPISODIO, // tabela
-            null,        // parametros
-            "${COLUNA_NUMERO} = ?",  // where
-            arrayOf(numero.toString()),
-            null,
-            null,
-            null,
-            null
-        )
+    override fun recuperarEpisodios(temporadaId: Int): MutableList<Episodio> {
+        val episodiosList: MutableList<Episodio> = ArrayList()
+        val episodioCursor = bdSeries.rawQuery("SELECT * " +
+                "                                   FROM EPISODIO WHERE temporada_id = ?",
+            arrayOf(temporadaId.toString()))
+        val episodio: Episodio
 
-        return if(episodioCursor.moveToFirst()){
-            with(episodioCursor){
-                Episodio(
-                    getInt(getColumnIndexOrThrow(COLUNA_NUMERO)),
-                    getString(getColumnIndexOrThrow(COLUNA_NOME)),
-                    getInt(getColumnIndexOrThrow(COLUNA_DURACAO)),
-                    getBoolean(getColumnIndexOrThrow(COLUNA_ASSISTIDO).toString())
+        if (episodioCursor.moveToFirst()) {
+            while (!episodioCursor.isAfterLast) {
+                val episodio = Episodio(
+                    episodioCursor.getInt(episodioCursor.getColumnIndexOrThrow("numero_sequencial")),
+                    episodioCursor.getString(episodioCursor.getColumnIndexOrThrow("nome")),
+                    episodioCursor.getInt(episodioCursor.getColumnIndexOrThrow("duracao")),
+                    intToBoolean(episodioCursor.getInt(episodioCursor.getColumnIndexOrThrow("assistido"))),
+                    episodioCursor.getInt(episodioCursor.getColumnIndexOrThrow("temporada_id"))
                 )
-            }
-        }
-        else{
-            Episodio()
-        }
-    }
-
-    override fun recuperarEpisodios(): MutableList<Episodio> {
-        val episodiosCursor = episodiosBd.rawQuery("SELECT * FROM ${TABELA_EPISODIO};", null)
-
-        val episodiosList = mutableListOf<Episodio>()
-
-        while(episodiosCursor.moveToNext()){
-            with(episodiosCursor){
-                episodiosList.add(
-                    Episodio(
-                        getInt(getColumnIndexOrThrow(COLUNA_NUMERO)),
-                        getString(getColumnIndexOrThrow(COLUNA_NOME)),
-                        getInt(getColumnIndexOrThrow(COLUNA_DURACAO)),
-                        getBoolean(getColumnIndexOrThrow(COLUNA_ASSISTIDO).toString())
-
-                    )
-                )
+                episodiosList.add(episodio)
+                episodioCursor.moveToNext()
             }
         }
         return episodiosList
     }
 
-    override fun atualizarEpisodio(episodio: Episodio): Int {
-        val episodioCv = converterEpisodioParaContentValues(episodio)
+    override fun recuperarEpisodio(numeroSequencial: Int, temporadaId: Int): Episodio? {
+        var episodio: Episodio? = null
+        val episodioCursor = bdSeries.rawQuery("SELECT * FROM EPISODIO " +
+                "WHERE numero_sequencial = ? AND temporada_id = ?",
+            arrayOf(numeroSequencial.toString(), temporadaId.toString()))
 
-        return episodiosBd.update(TABELA_EPISODIO, episodioCv, "${COLUNA_NUMERO} = ?", arrayOf(episodio.numero.toString()))
-    }
-
-    override fun removerEpisodio(numero: Int): Int {
-        return episodiosBd.delete(TABELA_EPISODIO, "${COLUNA_NUMERO} = ?", arrayOf(numero.toString()))
-    }
-
-    private fun converterEpisodioParaContentValues(episodio: Episodio) = ContentValues().also {
-        with(it){
-            put(COLUNA_NUMERO, episodio.numero)
-            put(COLUNA_NOME, episodio.nome)
-            put(COLUNA_DURACAO, episodio.duracao)
-            put(COLUNA_ASSISTIDO, episodio.assistido)
+        if (episodioCursor.moveToFirst()) run {
+            episodio = Episodio(
+                episodioCursor.getInt(episodioCursor.getColumnIndexOrThrow("numero_sequencial")),
+                episodioCursor.getString(episodioCursor.getColumnIndexOrThrow("nome")),
+                episodioCursor.getInt(episodioCursor.getColumnIndexOrThrow("duracao")),
+                intToBoolean(episodioCursor.getInt(episodioCursor.getColumnIndexOrThrow("assistido"))),
+                episodioCursor.getInt(episodioCursor.getColumnIndexOrThrow("temporada_id"))
+            )
         }
+        return episodio
+    }
+
+
+    override fun atualizarEpisodio(episodio: Episodio): Int {
+        val episodioCv = ContentValues()
+        episodioCv.put("numero_sequencial", episodio.numeroSequencialEp)
+        episodioCv.put("nome", episodio.nomeEp)
+        episodioCv.put("duracao", episodio.duracaoEp)
+        episodioCv.put("assistido", episodio.assistidoEp)
+        episodioCv.put("temporada_id", episodio.temporadaId)
+
+        return bdSeries.update("EPISODIO", episodioCv, "numero_sequencial = ? AND temporada_id = ?",
+            arrayOf(episodio.numeroSequencialEp.toString(), episodio.temporadaId.toString()))
+    }
+
+    override fun removerEpisodio(temporadaId: Int, numeroSequencial: Int): Int {
+        return bdSeries.delete("EPISODIO", "temporada_id = ? AND numero_sequencial = ?",
+            arrayOf(temporadaId.toString(), numeroSequencial.toString()))
+    }
+
+    private fun intToBoolean(int: Int): Boolean {
+        return int != 0
     }
 }

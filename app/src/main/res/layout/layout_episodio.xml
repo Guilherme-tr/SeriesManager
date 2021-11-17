@@ -1,40 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
     android:focusable="true"
-    android:background="?android:attr/selectableItemBackground">
+    android:background="?android:attr/selectableItemBackground"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/nomeEpisodioTv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Nome Episódio"
-        android:textSize="25sp"
+        android:text="Nome do ep"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/assistidoCbLl"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/numeroEpisodioTv"
+    <LinearLayout
+        android:id="@+id/assistidoCbLl"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Número"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <TextView
+            android:id="@+id/assistidoTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Assistido" />
+
+        <CheckBox
+            android:id="@+id/assistidoCb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/numeroSequencialEpisodioTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Numero squencial"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/duracaoEpisodioTv"
-        app:layout_constraintTop_toBottomOf="@id/nomeEpisodioTv" />
+        app:layout_constraintTop_toBottomOf="@id/nomeEpisodioTv"/>
 
     <TextView
         android:id="@+id/duracaoEpisodioTv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Duração"
+        android:text="Duração do ep"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@id/numeroEpisodioTv"
+        app:layout_constraintStart_toEndOf="@id/numeroSequencialEpisodioTv"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nomeEpisodioTv" />
+        app:layout_constraintTop_toBottomOf="@id/nomeEpisodioTv"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
