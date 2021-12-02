@@ -39,3 +39,5 @@ implementação de um mecanismo de autenticação usando e-mail e senha junto ao
 Não é necessário implementar outros métodos de autenticação. Caso julgue necessário é
 possível também configurar as regras de acesso do Banco de Dados de Tempo Real para que
 somente usuários autenticados possam fazer uso do banco.
+
+:movie_camera: Link da gravação da parte 2 do projeto disponível em https://youtu.be/u1YWMBYDglo
