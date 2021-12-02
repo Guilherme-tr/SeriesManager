@@ -67,4 +67,10 @@ class SerieActivity : AppCompatActivity() {
             finish()
         }
     }
+    override fun onStart() {
+        super.onStart()
+        if(AutenticacaoFirebase.firebaseAuth.currentUser == null){
+            finish()
+        }
+    }
 }
