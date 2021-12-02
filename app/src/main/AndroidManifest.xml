@@ -10,28 +10,38 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SeriesManager">
         <activity
-            android:name="EpisodioActivity"
+            android:name=".CadastrarUsuarioActivity"
             android:exported="true" />
         <activity
-            android:name="EpisodioListagemActivity"
+            android:name=".RecuperarSenhaActivity"
             android:exported="true" />
         <activity
-            android:name="TemporadaActivity"
-            android:exported="true" />
-        <activity
-            android:name="SerieActivity"
-            android:exported="true" />
-        <activity
-            android:name="TemporadaListagemActivity"
-            android:exported="true"/>
-        <activity
-            android:name="SerieListagemActivity"
+            android:name=".AutenticacaoActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".EpisodioActivity"
+            android:exported="true" />
+        <activity
+            android:name=".EpisodioListagemActivity"
+            android:exported="true" />
+        <activity
+            android:name=".TemporadaActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SerieActivity"
+            android:exported="true" />
+        <activity
+            android:name=".TemporadaListagemActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SerieListagemActivity"
+            android:exported="true">
         </activity>
     </application>
 
